@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Birthday Surprise</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
+body{
+    background:linear-gradient(135deg,#ff5f9e,#ff8cc8,#ffc3d8);
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    overflow:hidden;
+}
+.screen{
+    text-align:center;
+    color:white;
+    width:90%;
+    max-width:850px;
+}
+.glass{
+    background:rgba(255,255,255,0.15);
+    padding:30px;
+    border-radius:25px;
+    backdrop-filter:blur(10px);
+    box-shadow:0 0 35px rgba(255,255,255,0.3);
+}
+button{
+    padding:15px 30px;
+    border:none;
+    border-radius:30px;
+    font-size:20px;
+    cursor:pointer;
+}
+.hidden{display:none;}
+h1{
+    font-size:3rem;
+    animation:glow 1.5s infinite alternate;
+}
+@keyframes glow{
+    from{text-shadow:0 0 10px white;}
+    to{text-shadow:0 0 30px white;}
+}
+#countdown{
+    margin:20px 0;
+    font-size:2rem;
+}
+.slideshow{
+    width:260px;
+    height:260px;
+    margin:20px auto;
+    border-radius:20px;
+    overflow:hidden;
+}
+.slideshow img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+.shayari{
+    line-height:1.8;
+    font-size:1.2rem;
+}
+.heart{
+    position:absolute;
+    bottom:-20px;
+    animation:float 6s linear infinite;
+}
+@keyframes float{
+    from{transform:translateY(0);opacity:1;}
+    to{transform:translateY(-120vh);opacity:0;}
+}
+</style>
+</head>
+<body>
+
+<div class="screen">
+
+<div id="startScreen" class="glass">
+    <h1>💖 A Surprise For You 💖</h1>
+    <br><br>
+    <button onclick="openSurprise()">Open Surprise 🎁</button>
+</div>
+
+<div id="mainScreen" class="glass hidden">
+    <h1>🎂 Happy Birthday My Love ❤️</h1>
+
+    <div id="countdown"></div>
+
+    <button onclick="playMusic()">🎵 Play Music</button>
+
+    <div class="slideshow">
+        <img id="slide" src="photo1.jpg">
+    </div>
+
+    <div class="shayari">
+        Tumhari hasi meri duniya ka noor hai ❤️<br>
+        Tumhara birthday mere liye sabse khaas zaroor hai.<br>
+        Har dua mein tum ho, har khushi mein tum,<br>
+        Mere dil ka sabse pyara suroor ho tum 💖
+    </div>
+</div>
+
+</div>
+
+<video id="video" loop>
+    <source src="birthday_video.mp4">
+</video>
+
+<script>
+function openSurprise(){
+    document.getElementById("startScreen").classList.add("hidden");
+    document.getElementById("mainScreen").classList.remove("hidden");
+    playMusic();
+}
+
+function playMusic(){
+    const music=document.getElementById("music");
+    music.play().catch(err=>{
+        console.log("Music blocked:",err);
+    });
+}
+
+function updateCountdown(){
+    const now=new Date();
+    let year=now.getFullYear();
+    let birthday=new Date(year,6,5);
+
+    if(now>birthday){
+        birthday=new Date(year+1,6,5);
+    }
+
+    const diff=birthday-now;
+    const days=Math.floor(diff/(1000*60*60*24));
+    const hours=Math.floor((diff/(1000*60*60))%24);
+    const minutes=Math.floor((diff/(1000*60))%60);
+    const seconds=Math.floor((diff/1000)%60);
+
+    document.getElementById("countdown").innerHTML=
+    `${days} Days ${hours} Hours ${minutes} Minutes ${seconds} Seconds left 💖`;
+}
+setInterval(updateCountdown,1000);
+updateCountdown();
+
+const photos=["photo1.jpg","photo2.jpg","photo3.jpg"];
+let index=0;
+setInterval(()=>{
+    index=(index+1)%photos.length;
+    document.getElementById("slide").src=photos[index];
+},2500);
+
+function createHeart(){
+    const heart=document.createElement("div");
+    heart.className="heart";
+    heart.innerHTML="❤️";
+    heart.style.left=Math.random()*100+"vw";
+    heart.style.fontSize=(20+Math.random()*25)+"px";
+    document.body.appendChild(heart);
+    setTimeout(()=>heart.remove(),6000);
+}
+setInterval(createHeart,250);
+</script>
+
+</body>
+</html>
